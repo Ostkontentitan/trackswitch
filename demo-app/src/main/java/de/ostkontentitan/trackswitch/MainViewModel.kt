@@ -16,8 +16,8 @@ class MainViewModel @Inject constructor(private val trackSwitcher: TrackSwitcher
 
     init {
         viewModelScope.launch {
-            val abTestVariant = trackSwitcher.getTrackFor(TestVariantsSwitch).key
-            _stateFlow.emit(MainScreenState.Ready(false, abTestVariant))
+            val abTestVariant = trackSwitcher.getTrackFor(TestVariantsSwitch)
+            _stateFlow.emit(MainScreenState.Ready(false, abTestVariant.key))
         }
     }
 }
