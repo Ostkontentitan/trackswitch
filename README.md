@@ -1,26 +1,18 @@
 # trackswitch
 An Android library to manage feature switches with different backends. 
 
-Configure a TrackSwitcher and add it to your graph
-``
-@Module
-@InstallIn(SingletonComponent::class)
-class TrackSwitchModule {
+Configure a TrackSwitcher instance for your app.
 
-    @Provides
-    fun trackSwitcher(@ApplicationContext context: Context): TrackSwitcher {
+
         val prefs = context.getSharedPreferences("App.FeatureTrain.Preferences", MODE_PRIVATE)
         val builder = TrackSwitcherBuilder()
         builder.addBackend(SharedPreferenceBackend(prefs))
         builder.addBackend(FakeABTestBackend())
-        return builder.build()
-    }
-}
-``
+        val trackSwitcher = builder.build()
 
-Configure your feature flag
-``
-object TestVariantsSwitch : TrackSwitch<TestVariantsSwitch.Variant> {
+Configure your feature flag.
+
+	object TestVariantsSwitch : TrackSwitch<TestVariantsSwitch.Variant> {
     override val key: String = "enable_new_feature"
     override val backend: BackendType = SharedPreferenceBackend.Type
     override val default: Variant = Variant.VARIANT_B
@@ -31,19 +23,21 @@ object TestVariantsSwitch : TrackSwitch<TestVariantsSwitch.Variant> {
         VARIANT_B("ab_test_variant_b"),
         VARIANT_C("ab_test_variant_c")
     }
-}
-``
+	}
 
-Check the selected track
+Check the selected track where you need it. 
 ``
 val abTestVariant = trackSwitcher.getTrackFor(TestVariantsSwitch)
 ``
 
+Change the backend within 1 single single line going from local flags to ab testing or firebase remote. 
+
 Roadmap:
-- tests
-- add default backends
-- add configurable error handler
-- add 'override' backend option for test/debug builds
-- add convenience to retrieval (esp. for boolean)
-- add test examples
-- publish library
+
+* tests
+* add default backends
+* add configurable error handler
+* add 'override' backend option for test/debug builds
+* add convenience to retrieval (esp. for boolean)
+* add test examples
+* publish library
